@@ -12,14 +12,15 @@ use yii\web\View;
     echo "background: #d24811; color: yellow"?>" >
     <?=
     $model->getRole($model->user_id) === 'admin' && $model->blocked !== 1 ? (
-    Html::tag('p',$model->user->first_name, ['class' => 'col-md-3 bg-info'])
+    // можно использовать и "\yii\helpers\HtmlPurifier::process($model->user->first_name)" если нужно экранировать HTML
+    Html::tag('p',Html::encode($model->user->first_name), ['class' => 'col-md-3 bg-info'])
     ) : (
     Html::tag('p', Html::encode($model->user->first_name),['class' => 'col-md-3'])
     )
     ?>
     <?=
     $model->getRole($model->user_id) === 'admin' && $model->blocked !== 1  ? (
-    Html::tag('p',$model->message, ['class' => 'col-md-4 bg-info'])
+    Html::tag('p',Html::encode($model->message), ['class' => 'col-md-4 bg-info'])
     ) : (
     Html::tag('p', Html::encode($model->message),['class' => 'col-md-4'])
     )
