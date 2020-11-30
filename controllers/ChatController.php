@@ -91,7 +91,7 @@ class ChatController extends Controller
             ],
         ]);
 
-        return $this->render('@app/views/chat/view', [
+        return $this->render('view', [
             'provider' => $provider,
         ]);
     }
@@ -103,18 +103,18 @@ class ChatController extends Controller
         ]);
 
         // обновлять записи может только админ
-        if (Yii::$app->user->can('admin')) {
+        if (Yii::$app->user->can('admin') && $item) {
             if ($item->load(Yii::$app->request->post()) && $item->validate()) {
                 if ($item->save()) {
                     return $this->redirect(['chat/view']);
                 }
             }
 
-            return $this->render('@app/views/chat/edit', [
+            return $this->render('edit', [
                 'model' => $item,
             ]);
         } else {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException($message = "Запись не найдена!");
         }
     }
 
@@ -134,7 +134,7 @@ class ChatController extends Controller
         // удалять сообщения может только admin
         if (Yii::$app->user->can('admin')) {
             $item->delete();
-            return $this->redirect(['chat/view']);
+            return $this->redirect(['view']);
         }
 
         throw new NotFoundHttpException();
