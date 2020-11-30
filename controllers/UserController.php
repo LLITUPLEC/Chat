@@ -128,23 +128,20 @@ class UserController extends Controller
         $item = $id ? User::findOne($id) : new User([
             'id' => Yii::$app->user->id,
         ]);
-        if ( $item->id == 4) {
-            return 'Редактирование данной записи невозможно';
-        } else
-            // обновлять записи может только admin
-            if (Yii::$app->user->can('admin')) {
-                if ($item->load(Yii::$app->request->post()) && $item->validate()) {
-                    if ($item->save()) {
-                        return $this->redirect(['user/view', 'id' => $item->id]);
-                    }
+        // обновлять записи может только admin
+        if (Yii::$app->user->can('admin')) {
+            if ($item->load(Yii::$app->request->post()) && $item->validate()) {
+                if ($item->save()) {
+                    return $this->redirect(['user/view', 'id' => $item->id]);
                 }
-
-                return $this->render('update', [
-                    'model' => $item,
-                ]);
-            } else {
-                throw new NotFoundHttpException();
             }
+
+            return $this->render('update', [
+                'model' => $item,
+            ]);
+        } else {
+            throw new NotFoundHttpException();
+        }
     }
 
     /**
